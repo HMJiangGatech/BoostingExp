@@ -31,7 +31,7 @@ logit.cyclic <- function(Y, X, lambda, nlambda, gamma, n, d, max.ite, prec,verbo
          as.double(obj), as.double(runt), as.double(lambda), as.integer(nlambda), 
          as.double(gamma), as.integer(max.ite), as.double(prec), 
          as.integer(method.flag), as.integer(max.act.in), as.double(truncation), 
-         PACKAGE="picasso")
+         PACKAGE="oldpicasso")
   beta.list = vector("list", nlambda)
   for(i in 1:nlambda){
     beta.i = unlist(str[3])[((i-1)*d+1):(i*d)]
@@ -71,7 +71,7 @@ logit.greedy <- function(Y, X, lambda, nlambda, gamma, n, d, max.ite, prec,verbo
          as.double(beta), as.double(beta.intcpt), as.integer(n), as.integer(d), 
          as.integer(ite.lamb), as.integer(ite.cyc), as.integer(size.act),
          as.double(obj), as.double(runt), as.double(lambda), as.integer(nlambda), as.double(gamma), 
-         as.integer(max.ite), as.double(prec), as.integer(method.flag), PACKAGE="picasso")
+         as.integer(max.ite), as.double(prec), as.integer(method.flag), PACKAGE="oldpicasso")
   beta.list = vector("list", nlambda)
   for(i in 1:nlambda){
     beta.i = unlist(str[3])[((i-1)*d+1):(i*d)]
@@ -114,7 +114,7 @@ logit.prox <- function(Y, X, lambda, nlambda, gamma, n, d, max.ite, prec,verbose
          as.double(beta), as.double(beta.intcpt), as.integer(n), as.integer(d), 
          as.integer(ite.lamb), as.integer(ite.cyc), as.integer(size.act), 
          as.double(obj), as.double(runt), as.double(lambda), as.integer(nlambda), as.double(gamma), 
-         as.integer(max.ite), as.double(prec), as.double(L), as.integer(method.flag), PACKAGE="picasso")
+         as.integer(max.ite), as.double(prec), as.double(L), as.integer(method.flag), PACKAGE="oldpicasso")
   beta.list = vector("list", nlambda)
   for(i in 1:nlambda){
     beta.i = unlist(str[3])[((i-1)*d+1):(i*d)]
@@ -156,7 +156,7 @@ logit.stoc <- function(Y, X, lambda, nlambda, gamma, n, d, max.ite, prec,verbose
          as.integer(ite.cyc), as.integer(size.act), as.double(obj), 
          as.double(runt), as.double(lambda), as.integer(nlambda), as.double(gamma), 
          as.integer(max.ite), as.double(prec), as.integer(method.flag), 
-         as.integer(max.act.in), as.double(truncation), PACKAGE="picasso")
+         as.integer(max.act.in), as.double(truncation), PACKAGE="oldpicasso")
   beta.list = vector("list", nlambda)
   for(i in 1:nlambda){
     beta.i = unlist(str[3])[((i-1)*d+1):(i*d)]

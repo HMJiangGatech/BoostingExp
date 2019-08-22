@@ -41,7 +41,7 @@ scio.sc <- function(S, lambda, nlambda, gamma, d, maxdf, prec, max.ite, verbose,
          as.double(obj), as.double(runt), as.integer(d), as.double(lambda), 
          as.integer(nlambda), as.integer(max.ite), as.double(prec), as.double(gamma), 
          as.integer(method.flag), as.double(truncation), as.integer(max.act.in), 
-         as.integer(alg.flag), as.double(L), PACKAGE="picasso")
+         as.integer(alg.flag), as.double(L), PACKAGE="oldpicasso")
   runt1=Sys.time()-begt
   ite = list()
   ite[[1]] = matrix(unlist(str[2]), byrow = FALSE, ncol = nlambda)

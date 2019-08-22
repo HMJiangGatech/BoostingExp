@@ -6,6 +6,7 @@ library(picasso)
 library(oldpicasso)
 library(gcdnet)
 library(ncvreg)
+library(glmnet)
 library(spams)
 
 source("scripts.R")
@@ -14,41 +15,43 @@ sourceCpp("utils.cpp")
 # Experiment parameters
 # skip some comparison
 useRealData = FALSE
-dolinreg = TRUE
-dologreg = FALSE
-trialN = 10
+useSimData = TRUE
+trialN = 1
 # for simulated data set
 n = 100
-d = 1000 
+d = 1000
 ratio = 0.01
 nlambda = 30
 
 # Linear Regression
 set.seed(111)
 
-# Simulated data
-print('c=0.25')
-sim_data <- generate_sim(n=n, d=d, c=0.25, seed=112)
-
-test_gausnet(sim_data,alg="asp-newton",trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="greedy",trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="cyclic",trialN = trialN,prec=1*1e-4,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="glmnet",trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="gcdnet",trialN = trialN,prec=3*1e-6,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="ncvreg",trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="fista",trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda,fista_it = 20)
-rm(sim_data)
-
-print('c=0.75')
-sim_data <- generate_sim(n=n, d=d, c=0.75, seed=112)
-test_gausnet(sim_data,alg="asp-newton",trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="greedy",trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="cyclic",trialN = trialN,prec=1*1e-4,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="glmnet",trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="gcdnet",trialN = trialN,prec=3*1e-6,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="ncvreg",trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
-test_gausnet(sim_data,alg="fista",trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda,fista_it = 20)
-rm(sim_data)
+if( useSimData)
+{
+  # Simulated data
+  print('c=0.25')
+  sim_data <- generate_sim(n=n, d=d, c=0.25, seed=112)
+  
+  test_gausnet(sim_data,alg="asp-newton",trialN = trialN,prec=1*1e-8,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="greedy",    trialN = trialN,prec=3*1e-5,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="cyclic",    trialN = trialN,prec=5*1e-5,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="glmnet",    trialN = trialN,prec=2*1e-8,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="gcdnet",    trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="ncvreg",    trialN = trialN,prec=2*1e-5,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="fista",     trialN = 1,prec=1*1e-5,ratio=ratio, nlambda = nlambda,fista_it = 200)
+  rm(sim_data)
+  
+  print('c=0.75')
+  sim_data <- generate_sim(n=n, d=d, c=0.75, seed=112)
+  test_gausnet(sim_data,alg="asp-newton",trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="greedy",    trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="cyclic",    trialN = trialN,prec=1*1e-4,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="glmnet",    trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="gcdnet",    trialN = trialN,prec=3*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="ncvreg",    trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(sim_data,alg="fista",     trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda,fista_it = 20)
+  rm(sim_data)
+}
 
 # Real Data
 if(useRealData)
@@ -58,61 +61,39 @@ if(useRealData)
   y=as.matrix(y)
   x=scale(x)
   y=scale(y)
-  skip = c("glmnet","gcdnet")    # asp-newton
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=2*1e-6,ratio=ratio, nlambda = nlambda)
-  skip = c("glmnet","gcdnet","oldpicasso")    # greedy
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
-  skip = c("glmnet","gcdnet","oldpicasso","cyclic")    # cyclic
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=1.5*1e-4,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","gcdnet")  # glmnet
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=2*1e-6,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet")   # gcdnet
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=4*1e-7,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet","ncvreg","gcdnet")   # ncvreg
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=1*1e-3,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet","fista","gcdnet")   # fista
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = 1,prec=1*1e-3,ratio=ratio, nlambda = nlambda)
-  
-  
+  test_gausnet(list(X=x,Y=y),alg="asp-newton",trialN = trialN,prec=2*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="greedy",    trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="cyclic",    trialN = trialN,prec=1.5*1e-4,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="glmnet",    trialN = trialN,prec=2*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="gcdnet",    trialN = trialN,prec=4*1e-7,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="ncvreg",    trialN = trialN,prec=1*1e-3,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="fista",     trialN = 1,prec=1*1e-3,ratio=ratio, nlambda = nlambda)
+
+
   load("GHG.RData")
   x=scale(x)
   y=scale(y)
-  skip = c("glmnet","gcdnet")    # asp-newton
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
-  skip = c("glmnet","gcdnet","oldpicasso")    # greedy
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
-  skip = c("glmnet","gcdnet","oldpicasso","cyclic")    # cyclic
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=5*1e-5,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","gcdnet")  # glmnet
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet")   # gcdnet
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=3*1e-7,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet","ncvreg","gcdnet")   # ncvreg
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=6*1e-4,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet","fista","gcdnet")   # fista
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = 1,prec=1*1e-3,ratio=ratio, nlambda = nlambda)
-  
-  
+  test_gausnet(list(X=x,Y=y),alg="asp-newton",trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="greedy",    trialN = trialN,prec=5*1e-4,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="cyclic",    trialN = trialN,prec=5*1e-5,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="glmnet",    trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="gcdnet",    trialN = trialN,prec=3*1e-7,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="ncvreg",    trialN = trialN,prec=6*1e-4,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="fista",     trialN = 1,prec=1*1e-3,ratio=ratio, nlambda = nlambda)
+
+
   load("riboflavin.RData")
   x=matrix(as.numeric(x),nrow=71,byrow = F)
   y=as.matrix(y)
   x=scale(x)
   y=scale(y)
-  skip = c("glmnet","gcdnet")    # asp-newton
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
-  skip = c("glmnet","gcdnet","oldpicasso")    # greedy
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=2*1e-5,ratio=ratio, nlambda = nlambda)
-  skip = c("glmnet","gcdnet","oldpicasso","cyclic")    # cyclic
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","gcdnet")  # glmnet
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet")   # gcdnet
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=5*1e-9,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet","ncvreg","gcdnet")   # ncvreg
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = trialN,prec=1*1e-5,ratio=ratio, nlambda = nlambda)
-  skip = c("picasso","glmnet","fista","gcdnet")   # fista
-  test_gausnet(list(X=x,Y=y),skip=skip,trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda)
-  
+  test_gausnet(list(X=x,Y=y),alg="asp-newton",trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="greedy",    trialN = trialN,prec=2*1e-5,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="cyclic",    trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="glmnet",    trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="gcdnet",    trialN = trialN,prec=5*1e-9,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="ncvreg",    trialN = trialN,prec=1*1e-5,ratio=ratio, nlambda = nlambda)
+  test_gausnet(list(X=x,Y=y),alg="fista",     trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda)
+
   test_gausnet(DrivFace,skip=skip)
 }
-

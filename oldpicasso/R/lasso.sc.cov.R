@@ -41,7 +41,7 @@ lasso.sc.cov <- function(Y, X, XY, lambda, nlambda, gamma, n, d, df, max.ite, pr
          as.double(obj), as.double(runt), as.integer(err), as.double(lambda), as.integer(nlambda), 
          as.double(gamma), as.integer(max.ite), as.double(prec), as.integer(method.flag), 
          as.double(truncation), as.integer(n), as.integer(d), as.integer(df), 
-         as.integer(max.act.in), as.integer(alg.flag), as.double(L), PACKAGE="picasso")
+         as.integer(max.act.in), as.integer(alg.flag), as.double(L), PACKAGE="oldpicasso")
   ite = list()
   ite[[1]] = unlist(str[9])
   ite[[2]] = unlist(str[10])

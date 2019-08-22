@@ -249,7 +249,7 @@ test_lognet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN =
 test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN = 10, algo="",prec=2.0*1e-6, max.iter=1000, penalty = "lasso"){
   
   if (algo %in% c("asp-newton","greedy","cyclic") ){
-    cat("ASP-Newton timing:\n")
+    cat(algo, "timing:\n")
     picasso.rtime <- rep(0, trialN) 
     picasso.KKTerr <- rep(0, trialN)
     for (i in 1:trialN){
@@ -260,10 +260,10 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
         t <- system.time(fitp<-picasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, method=method, #alg = "proximal",
                                        standardize=FALSE, verbose=FALSE, prec=prec, nlambda=nlambda, max.ite=max.iter))
       else if(algo=="cyclic")
-        t <- system.time(fitp<-picasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, alg = "cyclic",
+        t <- system.time(fitp<-oldpicasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, alg = "cyclic",
                                        standardize=FALSE, verbose=FALSE, prec=prec, nlambda=nlambda, max.ite=max.iter))
       else if(algo=="greedy")
-        t <- system.time(fitp<-picasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, alg = "greedy",
+        t <- system.time(fitp<-oldpicasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, alg = "greedy",
                                        standardize=FALSE, verbose=FALSE, prec=prec, nlambda=nlambda, max.ite=max.iter))
       picasso.rtime[i] <- t[1]
     }
@@ -297,10 +297,12 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     cat("glmnet timing:\n")
     rtime <- rep(0, trialN)
     KKTerr <- rep(0, trialN)
+    fitp<-picasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, #alg = "proximal",
+                  standardize=FALSE, verbose=FALSE, prec=prec, nlambda=nlambda, max.ite=1)
     
     for (i in 1:trialN){
-      t <- system.time(fit<-glmnet(data$X, data$Y, family="gaussian", lambda.min.ratio = ratio,
-                                   standardize=FALSE, thresh=prec,nlambda = nlambda))
+      t <- system.time(fit<-glmnet(data$X, data$Y, family="gaussian", lambda=fitp$lambdas,
+                                   standardize=FALSE, thresh=prec))
       rtime[i] <- t[1]
     }
     err <- rep(0, nlambda)
@@ -324,7 +326,7 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     print(gausnet_loss(data, fit$beta[,nlambda], fit$a0[nlambda], fit$lambda[nlambda]))
   }
   
-  if (!("ncvreg" %in% skip)){
+  if (algo == "ncvreg"){
     cat("ncvreg timing:\n")
     rtime <- rep(0, trialN)
     KKTerr <- rep(0, trialN)
@@ -355,7 +357,7 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     print(gausnet_loss(data, fit$beta[-1,nlambda], fit$beta[1,nlambda], fit$lambda[nlambda]))
   }
 
-  if (!("gcdnet" %in% skip)){
+  if (algo == "gcdnet"){
     cat("gcdnet timing:\n")
     rtime <- rep(0, trialN)
     KKTerr <- rep(0, trialN)
@@ -381,7 +383,7 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     print(sqrt(var(KKTerr)))
   }
 
-  if (!("fista" %in% skip)){
+  if (algo == "fista"){
     fitp<-picasso(data$X, data$Y,family="gaussian", lambda.min.ratio=ratio, #alg = "proximal",
                                          standardize=FALSE, verbose=FALSE, prec=prec, nlambda=nlambda, max.ite=20)
     cat("fista timing:\n")
@@ -391,12 +393,12 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     for (i in 1:trialN){
       t <- system.time(fit<-pathfista(data, fitp$lambda, max_it=fista_it, lostfamily='square',tol=prec))
       rtime[i] <- t[1]
-      err <- rep(0, nlambda)
-      for (j in 1:length(lambdas)){
-        err[j] <- gausnet_KKT(data, fit$beta[,j], fit$b0[j], lambdas[j])
-      }
-      KKTerr[i] <- mean(err)
     }
+    err <- rep(0, nlambda)
+    for (j in 1:length(lambdas)){
+      err[j] <- gausnet_KKT(data, fit$beta[,j], fit$b0[j], lambdas[j])
+    }
+    KKTerr[i] <- mean(err)
     cat("mean running time: \n")
     print(mean(rtime))
     cat("standard deviation of running time: \n")
@@ -405,6 +407,15 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     print(mean(KKTerr))
     cat("standard deviation of KKT error: \n")
     print(sqrt(var(KKTerr)))
+    cat("last KKT error: \n")
+    print(err[nlambda])
+    if(!is.null(data$true_beta))
+    {  
+      cat("estimation error: \n")
+      print(norm(as.matrix(fitp$beta[,nlambda] - data$true_beta)))
+    }
+    cat("objective values: \n")
+    print(gausnet_loss(data, fitp$beta[,nlambda], fitp$intercept[nlambda], fitp$lambda[nlambda]))
   }
 }
 

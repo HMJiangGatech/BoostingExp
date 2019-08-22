@@ -55,7 +55,7 @@ picasso.lasso <- function(X,
     xm = rep(0,d)
     xinvc.vec = rep(0,d)
     str = .C("standardize_design", as.double(X), as.double(xx), as.double(xm), as.double(xinvc.vec), 
-             as.integer(n), as.integer(d), PACKAGE="picasso")
+             as.integer(n), as.integer(d), PACKAGE="oldpicasso")
     xx = matrix(unlist(str[2]),nrow=n,ncol=d,byrow=FALSE)
     xm = matrix(unlist(str[3]),nrow=1)
     xinvc.vec = unlist(str[4])
