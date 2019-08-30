@@ -26,20 +26,20 @@ source('linear_regression.R')
 **Precision Setting**
 We make every algorithm achieves the approximate KKT error around $0.001$ by setting the precision as follows for every experiments.
 
-| Data |n  |p  |Ours | Greedy | Cyclic | APG  | Glmnet | Gcdnet | Ncvreg |
-|------|---|---|-----|--------|--------|------|--------|--------|--------|
-|Simulate Well-Cond.   |  100  | 1000   |   |   |   |   |   |   |   |
-|Simulate Well-Cond.   |  100  | 10000  |   |   |   |   |   |   |   |
-|Simulate Well-Cond.   |  1000 | 1000   |   |   |   |   |   |   |   |
-|Simulate Well-Cond.   |  1000 | 10000  |   |   |   |   |   |   |   |
-|Simulate Well-Cond.   |  5000 | 10000  |   |   |   |   |   |   |   |
-|Simulate Well-Cond.   |  10000| 1000   |   |   |   |   |   |   |   |
-|Simulate Ill-Cond.    |  100  | 1000   |   |   |   |   |   |   |   |
-|Simulate Ill-Cond.    |  100  | 10000  |   |   |   |   |   |   |   |
-|Simulate Ill-Cond.    |  1000 | 1000   |   |   |   |   |   |   |   |
-|Simulate Ill-Cond.    |  1000 | 10000  |   |   |   |   |   |   |   |
-|Simulate Ill-Cond.    |  5000 | 10000  |   |   |   |   |   |   |   |
-|Simulate Ill-Cond.    |  10000| 1000   |   |   |   |   |   |   |   |
+| Data |n  |p  | scripts |
+|------|---|---|---------|
+|Simulate Well-Cond.   |  100  | 1000   | linear/simu_wc_100_1000.R  |
+|Simulate Well-Cond.   |  100  | 10000  |   | 
+|Simulate Well-Cond.   |  1000 | 1000   |   | 
+|Simulate Well-Cond.   |  1000 | 10000  |   | 
+|Simulate Well-Cond.   |  5000 | 10000  |   |
+|Simulate Well-Cond.   |  10000| 1000   |   | 
+|Simulate Ill-Cond.    |  100  | 1000   |   | 
+|Simulate Ill-Cond.    |  100  | 10000  |   |
+|Simulate Ill-Cond.    |  1000 | 1000   |   |
+|Simulate Ill-Cond.    |  1000 | 10000  |   |
+|Simulate Ill-Cond.    |  5000 | 10000  |   | 
+|Simulate Ill-Cond.    |  10000| 1000   |   |
 
 ## Logistic Regression Experiments
 

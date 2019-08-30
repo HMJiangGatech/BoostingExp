@@ -16,7 +16,7 @@ sourceCpp("utils.cpp")
 # skip some comparison
 useRealData = FALSE
 useSimData = TRUE
-trialN = 1
+trialN = 10
 # for simulated data set
 n = 100
 d = 1000
@@ -38,7 +38,7 @@ if( useSimData)
   test_gausnet(sim_data,alg="glmnet",    trialN = trialN,prec=2*1e-8,ratio=ratio, nlambda = nlambda)
   test_gausnet(sim_data,alg="gcdnet",    trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
   test_gausnet(sim_data,alg="ncvreg",    trialN = trialN,prec=2*1e-5,ratio=ratio, nlambda = nlambda)
-  test_gausnet(sim_data,alg="fista",     trialN = 1,prec=1*1e-5,ratio=ratio, nlambda = nlambda,fista_it = 200)
+  test_gausnet(sim_data,alg="fista",     trialN = 1,prec=1*1e-5,ratio=ratio, nlambda = nlambda,fista_it = 100)
   rm(sim_data)
   
   print('c=0.75')
@@ -49,7 +49,7 @@ if( useSimData)
   test_gausnet(sim_data,alg="glmnet",    trialN = trialN,prec=3*1e-8,ratio=ratio, nlambda = nlambda)
   test_gausnet(sim_data,alg="gcdnet",    trialN = trialN,prec=3*1e-6,ratio=ratio, nlambda = nlambda)
   test_gausnet(sim_data,alg="ncvreg",    trialN = trialN,prec=1*1e-6,ratio=ratio, nlambda = nlambda)
-  test_gausnet(sim_data,alg="fista",     trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda,fista_it = 20)
+  test_gausnet(sim_data,alg="fista",     trialN = 1,prec=1*1e-1,ratio=ratio, nlambda = nlambda,fista_it = 100)
   rm(sim_data)
 }
 

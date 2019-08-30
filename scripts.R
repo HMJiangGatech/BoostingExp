@@ -76,16 +76,28 @@ pathfista <- function(data, lambdas, tol=1e-6, max_it=100, lostfamily='logistic'
   bprev <- matrix(rep(0, d+1), ncol=1)
   tt = c()
   ct = 0;
+  y <- matrix(data$Y, ncol=1)
+  x <- cbind(data$X, matrix(rep(1,n), ncol=1))
   for (i in 1:nlambda){
-     y <- matrix(2*data$Y - 1, ncol=1)
-     x <- cbind(data$X, matrix(rep(1,n), ncol=1))
-     t<-system.time(fit <- spams.fistaFlat(y, x, bprev, 
+     t<-system.time(fit <- spams.fistaFlat(y, x, bprev,
                             loss=lostfamily, regul = 'l1', tol=tol, max_it = max_it,
-                            intercept = TRUE, # no not regularize last row of beta
+                            intercept = FALSE, # no not regularize last row of beta
                             lambda1 = lambdas[i]))
      out$beta[,i] <- fit[1:d,1]
      out$b0[i] <- fit[d+1,1]
      bprev <- fit
+    
+     # lambda = lambdas[i]
+     # f <- function(beta){ 0.5*norm(x%*%beta - y, "F")^2 }
+     # gradf <- function(beta){ cat(class(t(x)%*%(x%*%beta - y)), '\n'); as.vector(t(x)%*%(x%*%beta - y)) }
+     # g <- function(beta) { lambda*norm(as.matrix(beta),'1') }
+     # proxg <- function(beta, tau) {  sign(beta)*(sapply(c(abs(beta) - drop(tau)*lambda), FUN=function(x) {max(x,0)}))}
+     # tau1 <- 10
+     # t<-system.time(fit  <- fasta(f,gradf,g,proxg,bprev,tau1) )
+     # out$beta[,i] <- sol$x[1:d,1]
+     # out$b0[i] <- sol$x[d+1,1]
+     # bprev <- sol$x
+     # cat("==================")
      ct = ct+t[1]
      tt = c(tt,ct)
   }
