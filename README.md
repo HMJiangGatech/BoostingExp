@@ -6,7 +6,7 @@ The proposed ASP-Newton method is implemented in the lastest version of `picasso
 
 
 **Install old picasso**
-The old picasso implements the greedy selection rule and can be installed by
+The old picasso implements the greedy/cyclic selection rule and can be installed by
 ```R
 install.packages("oldpicasso", repos = NULL, type="source")
 ```
