@@ -12,7 +12,7 @@ install.packages("oldpicasso", repos = NULL, type="source")
 ```
 
 **Install spams**
-The old picasso implements the greedy selection rule and can be installed by
+The accelerated proximal gradient method requires `spams-R` which can be installed by
 ```R
 install.packages("spams-R/spams", repos = NULL, type="source")
 ```
@@ -20,7 +20,7 @@ install.packages("spams-R/spams", repos = NULL, type="source")
 ## Linear Regression Experiments (Table 2)
 
 ```R
-source('linear_regression/x.R')
+source('linear/x.R')
 ```
 
 ## Logistic Regression Experiments
