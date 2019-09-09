@@ -48,7 +48,7 @@ generate_sim_lognet <- function(n, d, c, seed=111) {
   return(list(X=X, Y=c(Y), true_beta=c(true_beta)))
 }
 
-generate_sim<- function(n, d, c, seed=111) {
+generate_sim<- function(n, d, c, seed=111, sigma=1) {
   set.seed(seed)
   
   X <- scale(matrix(rnorm(n*d),nrow=n)+rnorm(n,1)*0.5*(c+(c^2+4*c)^0.5))
@@ -56,7 +56,7 @@ generate_sim<- function(n, d, c, seed=111) {
   s <- 18
   true_beta <- rep(0,d)
   true_beta[sample(d,18)] = rep(c(3,2,1.5),6)
-  Y <- X%*%true_beta+rnorm(n)
+  Y <- X%*%true_beta+rnorm(n)*sigma
   Y <- Y
   Y = Y - mean(Y)
   return(list(X=X, Y=c(Y), true_beta=c(true_beta)))
@@ -228,8 +228,6 @@ test_lognet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN =
   #   print(sqrt(var(rtime)))
   #   cat("mean KKT error: \n")
   #   print(mean(KKTerr))
-  #   cat("standard deviation of KKT error: \n")
-  #   print(sqrt(var(KKTerr)))
   # }
   # 
   # if (!("fista" %in% skip)){
@@ -252,14 +250,12 @@ test_lognet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN =
   #   print(sqrt(var(rtime)))
   #   cat("mean KKT error: \n")
   #   print(mean(KKTerr))
-  #   cat("standard deviation of KKT error: \n")
-  #   print(sqrt(var(KKTerr)))
   # }
 }
 
 
 test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN = 10, algo="",prec=2.0*1e-6, max.iter=1000, penalty = "lasso"){
-  
+  cat("=============")
   if (algo %in% c("asp-newton","greedy","cyclic") ){
     cat(algo, "timing:\n")
     picasso.rtime <- rep(0, trialN) 
@@ -391,8 +387,6 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     print(mean(err))
     cat("last KKT error: \n")
     print(err[nlambda])
-    cat("standard deviation of KKT error: \n")
-    print(sqrt(var(KKTerr)))
   }
 
   if (algo == "fista"){
@@ -417,8 +411,6 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
     print(sqrt(var(rtime)))
     cat("mean KKT error: \n")
     print(mean(KKTerr))
-    cat("standard deviation of KKT error: \n")
-    print(sqrt(var(KKTerr)))
     cat("last KKT error: \n")
     print(err[nlambda])
     if(!is.null(data$true_beta))

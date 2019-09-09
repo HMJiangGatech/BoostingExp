@@ -29,7 +29,7 @@ set.seed(111)
 # Real Data
 if(useRealData)
 {
-  cat("===================DrivFace")
+  cat("===================DrivFace\n")
   load("../data/DrivFace.RData")
   x=as.matrix(x)
   y=as.matrix(y)
@@ -43,7 +43,7 @@ if(useRealData)
   test_gausnet(list(X=x,Y=y),alg="ncvreg",    trialN = trialN,prec=1*1e-4,ratio=ratio, nlambda = nlambda)
   test_gausnet(list(X=x,Y=y),alg="fista",     trialN = 1,     prec=1*1e-3,ratio=ratio, nlambda = nlambda)
 
-  cat("===================GHG")
+  cat("===================GHG\n")
   load("../data/GHG.RData")
   x=scale(x)
   y=scale(y)
@@ -56,7 +56,7 @@ if(useRealData)
   test_gausnet(list(X=x,Y=y),alg="fista",     trialN = 1,     prec=1*1e-3,ratio=ratio, nlambda = nlambda)
 
   
-  cat("===================riboflavin")
+  cat("===================riboflavin\n")
   load("../data/riboflavin.RData")
   x=matrix(as.numeric(x),nrow=71,byrow = F)
   y=as.matrix(y)
