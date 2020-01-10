@@ -346,7 +346,7 @@ test_gausnet <- function(data, nlambda = 100, ratio=0.01, fista_it = 20, trialN 
       method = "SCAD"
     for (i in 1:trialN){
       t <- system.time(fit<-ncvreg(data$X, data$Y, family="gaussian", lambda.min = ratio,penalty=method,max.iter=100000,
-                                   eps=prec,nlambda = nlambda))
+                                   eps=prec,nlambda = nlambda,returnX=TRUE))
       rtime[i] <- t[1]
     }
     err <- rep(0, nlambda)
